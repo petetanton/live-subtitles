@@ -1,0 +1,60 @@
+<html>
+<head>
+    <style>
+        input {
+            width: 100%;
+            font-family: Helvetica;
+            font-size: 2em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin</h1>
+    <form action="javascript:handleForm()">
+    <!--<form>-->
+        Caption:<br>
+        <input id="captionText" type="text" name="caption" autocomplete="off"><br>
+    </form>
+    <p>Length: <span id="length"></span></p>
+    <script type="text/javascript">
+        document.getElementById("captionText").oninput = function() {
+            var captionText = document.getElementById("captionText");
+            var value = captionText.value;
+            if (value.slice(- 1) == ' ') {
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", '/post', true);
+
+                xhr.setRequestHeader("Content-type", "text/plain");
+
+                xhr.onreadystatechange = function() {//Call a function when the state changes.
+                    if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+                        // Request finished. Do processing here.
+                    }
+                };
+                xhr.send(captionText.value);
+            }
+            length = value.length;
+            var lengthText = document.getElementById('length');
+            lengthText.innerHTML = length;
+            lengthText.style.color = 'red';
+
+        };
+
+        function handleForm() {
+            var captionText = document.getElementById('captionText');
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", '/post', true);
+
+            xhr.setRequestHeader("Content-type", "text/plain");
+
+            xhr.onreadystatechange = function() {//Call a function when the state changes.
+                if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+                    // Request finished. Do processing here.
+                }
+            };
+            xhr.send(captionText.value);
+            captionText.value = "";
+        }
+    </script>
+</body>
+</html>
