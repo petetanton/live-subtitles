@@ -22,7 +22,7 @@
             /*width:100%;*/
             /*height:218px;*/
             color: white;
-            background-color: black;
+            background-color: rgba(0, 0, 0, 0.9);
             position:absolute;
             margin-left: 1em;
             margin-right: 1em;
@@ -39,16 +39,17 @@
                     results = regex.exec(location.search);
             return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
         }
-        var event = getParameterByName('event');
-        if (event) {
+//        var event = getParameterByName('event');
+//        if (event) {
 //            document.write('<iframe id="frame" src="http://localhost:8080/api?event='+event+'&ff=Verdana,sans-serif&fs=50&fgc=ffffff&bgc=000000&spacing=1.2&header=false&controls=false&footer=false&chat=false" frameborder="0" scrolling="no"></iframe>');
             document.write('<p id="text"></p>')
-        }
+//        }
 
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 // Typical action to be performed when the document is ready:
+                console.log(xhttp.responseText);
                 document.getElementById("text").innerHTML = xhttp.responseText;
             }
         };
