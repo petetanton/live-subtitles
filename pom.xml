@@ -4,7 +4,7 @@
 
     <groupId>live-subtitles</groupId>
     <artifactId>live-subtitles</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.4-SNAPSHOT</version>
     <dependencies>
         <dependency>
             <groupId>io.netty</groupId>
