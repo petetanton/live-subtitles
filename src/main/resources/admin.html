@@ -20,7 +20,8 @@
         document.getElementById("captionText").oninput = function() {
             var captionText = document.getElementById("captionText");
             var value = captionText.value;
-            if (value.slice(- 1) == ' ') {
+            var lastChar = value.slice(- 1);
+            if (lastChar == ' ' || lastChar == ',' || lastChar == '.' || lastChar == ';' || lastChar == ':' || lastChar == '!' || lastChar == '?') {
                 var xhr = new XMLHttpRequest();
                 xhr.open("POST", '/post', true);
 

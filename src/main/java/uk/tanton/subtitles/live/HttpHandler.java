@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static io.netty.buffer.Unpooled.copiedBuffer;
 
@@ -21,11 +22,9 @@ public class HttpHandler extends ChannelInboundHandlerAdapter {
     private static final Gson GSON = new Gson();
 
     private final SubtitleCache subtitleCache;
-    private final Args args;
 
-    public HttpHandler(SubtitleCache subtitleCache, Args args) {
+    public HttpHandler(SubtitleCache subtitleCache) {
         this.subtitleCache = subtitleCache;
-        this.args = args;
     }
 
     @Override
@@ -49,7 +48,8 @@ public class HttpHandler extends ChannelInboundHandlerAdapter {
     }
 
     private FullHttpResponse generateResponse(FullHttpRequest request) throws IOException {
-        LOG.info(String.format("Access: %s", request.getUri()));
+        String uri = request.getUri();
+        LOG.info(String.format("Access: %s", uri));
         FullHttpResponse response;
         String responseMessage = "";
         String contentType = "";
@@ -65,18 +65,32 @@ public class HttpHandler extends ChannelInboundHandlerAdapter {
 //                Other
             contentType = "text/html";
 
-            if (request.getUri().startsWith("/admin")) {
+            if (uri.startsWith("/admin")) {
 //                    admin
                 InputStream resourceAsStream = this.getClass().getResourceAsStream("/admin.html");
                 responseMessage = IOUtils.toString(resourceAsStream, StandardCharsets.UTF_8);
 
-            } else if (request.getUri().startsWith("/view")) {
+            } else if (uri.startsWith("/view")) {
 //                    view
                 InputStream resourceAsStream = this.getClass().getResourceAsStream("/view.html");
                 responseMessage = IOUtils.toString(resourceAsStream, StandardCharsets.UTF_8);
+                String bgcolour = "0f0";
+                String textboxo = "0.9";
 
-                responseMessage = responseMessage.replace("#0f0", args.getBgColour());
-                responseMessage = responseMessage.replace("0.9", args.getTextBoxOpacity());
+                QueryStringDecoder queryStringDecoder = new QueryStringDecoder(uri, StandardCharsets.UTF_8);
+
+                List<String> bgcolourList = queryStringDecoder.parameters().get("bgcolour");
+                if (bgcolourList != null && bgcolourList.size() > 0) {
+                    bgcolour = bgcolourList.get(0);
+                }
+
+                List<String> textboxoList = queryStringDecoder.parameters().get("textboxo");
+                if (textboxoList != null && textboxoList.size() > 0) {
+                    textboxo = textboxoList.get(0);
+                }
+
+                responseMessage = responseMessage.replace("#0f0", "#" + bgcolour);
+                responseMessage = responseMessage.replace("0.9", textboxo);
 
             } else {
 //                must be api

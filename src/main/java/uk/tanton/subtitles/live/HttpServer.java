@@ -20,11 +20,9 @@ public class HttpServer {
     private final EventLoopGroup masterGroup;
     private final EventLoopGroup slaveGroup;
     private final SubtitleCache subtitleCache;
-    private final Args args;
 
-    public HttpServer(SubtitleCache subtitleCache, Args args) {
+    public HttpServer(SubtitleCache subtitleCache) {
         this.subtitleCache = subtitleCache;
-        this.args = args;
         this.masterGroup = new NioEventLoopGroup();
         this.slaveGroup = new NioEventLoopGroup();
     }
@@ -45,7 +43,7 @@ public class HttpServer {
                     protected void initChannel(final SocketChannel sc) throws Exception {
                         sc.pipeline().addLast("codec", new HttpServerCodec());
                         sc.pipeline().addLast("agg", new HttpObjectAggregator(512*1024));
-                        sc.pipeline().addLast("request", new HttpHandler(subtitleCache, args));
+                        sc.pipeline().addLast("request", new HttpHandler(subtitleCache));
                     }
                 })
                 .option(ChannelOption.SO_BACKLOG, 128)
