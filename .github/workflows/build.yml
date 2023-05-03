@@ -5,6 +5,7 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    concurrency: "one"
 
     steps:
       - uses: actions/checkout@v3
